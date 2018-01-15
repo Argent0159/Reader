@@ -21,14 +21,9 @@ namespace Reader
         {
 
             var descTablePath = @"txt\idnum2itemdesctable.txt";
-            var krDisplayNameTablePath = @"txt\idnum2itemresnametable.txt";
-            var displayNameTablePath = @"txt\num2itemdisplaynametable.txt";
-
-
+            var displayNameTablePath = @"txt\idnum2itemdisplaynametable.txt";
 
             var nameTable = GetNameTable(displayNameTablePath,Encoding.GetEncoding("shift-jis"));
-
-            var krNameTable = GetNameTable(krDisplayNameTablePath, Encoding.GetEncoding("euc-kr"));
 
             var descTable = GetDescTable(descTablePath);
 
@@ -78,7 +73,11 @@ namespace Reader
                 var readFile = File.ReadLines(filePath, encoding);
 
                 //ファイル・フィルタリング
-                var filtered = readFile.Where(val => !val.StartsWith("//") || string.IsNullOrWhiteSpace(val));
+
+                var filtered = readFile
+                    .Where(val => !val.StartsWith("//"))
+                    .Where(val => !string.IsNullOrEmpty(val));
+                
 
                 Func<string, NameTable> convert = val =>
                  {
@@ -96,9 +95,6 @@ namespace Reader
                 {
                     nameTable.Add(new NameTable(item[0], item[1]));
                 }
-
-                //nameTable = readFile.Select(val => convert(val));
-               
                 
             }
 
