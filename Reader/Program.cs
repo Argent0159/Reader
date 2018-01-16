@@ -61,7 +61,7 @@ namespace Reader
 
             };
             
-            MultiSerializeXml(serializeTarget);
+            //MultiSerializeXml(serializeTarget);
         }
 
         private static void MultiSerializeXml(IEnumerable<KeyValuePair<string,object>> pairs)
