@@ -37,6 +37,19 @@ namespace Reader
                 .Join(nameTable, d => d.Id, n => n.Id, (desc, name) => new Item(desc, name.Name))
                 .ToArray();
 
+            var cardAndIcon = nameTable
+                .GroupJoin(
+                    cardTable,
+                    name => name.Id,
+                    card => card.Id,
+                    (name, card) => new { name.Id, card })
+                .GroupJoin(
+                    iconTable,
+                    name => name.Id,
+                    icon => icon.Id,
+                    (name, icon) => new { name.Id, name.card, icon });
+                              
+
             //シリアライズ対象の定義と実行
             var serializeTarget = new List<KeyValuePair<string, object>>()
             {
