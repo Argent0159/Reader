@@ -23,6 +23,12 @@ namespace Reader
             Text = text;
         }
 
+        public DescTable(string id,string text)
+        {
+            Id = int.TryParse(id, out var number) ? number : 0;
+            Text = text;
+        }
+
         [XmlAttribute("ID")]
         public int Id { get; set; }
         [XmlElement]

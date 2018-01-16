@@ -15,9 +15,6 @@ namespace Reader
 {
     class Program
     {
-        static Func<Match, int, int> matchIntParse = (match, index) => int.TryParse(match.Groups[index].ToString(), out int answer) ? answer : 0;
-        static Func<Match, int, string> matchToString = (match, index) => match.Groups[index].ToString();
-
         static void Main(string[] args)
         {
 
@@ -108,10 +105,6 @@ namespace Reader
 
                 var fileText = string.Join(Environment.NewLine, readFile);
 
-
-                //正規表現の実行、メソッド「info」はパターンの共通化
-                Func<string, string> info = val => $@"({val}\s*?[:：]\s*?(\S+?))?\s*?";
-
                 var textPattern = $@"(\d+)#\s*([\S\s]+?)\s*#";
 
                 var pattern = new Regex(textPattern);
@@ -119,8 +112,8 @@ namespace Reader
                 list = pattern.Matches(fileText).Cast<Match>()
                     .Select(val =>
                     {
-                        var id = matchIntParse(val, 1);
-                        var text = matchToString(val, 2);
+                        var id = val.Groups[1].ToString();
+                        var text = val.Groups[2].ToString();
 
                         return new DescTable(id, text);
                     })
