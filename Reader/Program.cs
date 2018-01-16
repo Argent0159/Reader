@@ -98,7 +98,7 @@ namespace Reader
         //アイテム情報を取得する
         static IEnumerable<DescTable> GetDescTable(string filePath)
         {
-            IList<DescTable> list = new List<DescTable>();
+            IEnumerable<DescTable> list;
             if (File.Exists(filePath))
             {
                 //ファイルを読み込み、表示修飾に用いるテキストを削除
@@ -116,17 +116,19 @@ namespace Reader
 
                 var pattern = new Regex(textPattern);
 
-                var matches = pattern.Matches(fileText).Cast<Match>();
+                list = pattern.Matches(fileText).Cast<Match>()
+                    .Select(val =>
+                    {
+                        var id = matchIntParse(val, 1);
+                        var text = matchToString(val, 2);
 
-                foreach (var item in matches)
-                {
-
-                    var id = matchIntParse(item, 1);
-                    var text = matchToString(item, 2);
-
-                    list.Add(new DescTable(id,text));
-                }
-
+                        return new DescTable(id, text);
+                    })
+                    .ToArray();
+            }
+            else
+            {
+                list = new DescTable[0];
             }
 
             return list;
