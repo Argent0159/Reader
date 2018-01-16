@@ -4,35 +4,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
+using System.Xml.Serialization;
 using System.Runtime.Serialization;
 
 namespace Reader
 {
-    [DataContract]
     public class DescTable
     {
-        
-        public DescTable(int id,string text,string category,string equip,int weight)
+
+        public DescTable() : this(0,null)
+        {
+
+        }
+
+        public DescTable(int id, string text)
         {
             Id = id;
             Text = text;
-            Category = category;
-            Equip = equip;
-            Weight = weight;
         }
-        
 
-        [DataMember]
+        [XmlAttribute("ID")]
         public int Id { get; set; }
-        [DataMember]
+        [XmlElement]
         public string Text { get; set; }
-        [DataMember]
-        public string Category { get; set; }
-        [DataMember]
-        public string Equip { get; set; }
-        [DataMember]
-        public int Weight { get; set; }
+
 
         public override string ToString()
         {

@@ -4,13 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
-using System.Xml;
+using System.Xml.Serialization;
 
 namespace Reader
 {
-    [DataContract]
-    class NameTable
+    public class NameTable
     {
+        public NameTable() : this(0, null)
+        {
+
+        }
+
         public NameTable(int id,string name)
         {
             Id = id;
@@ -23,9 +27,9 @@ namespace Reader
             Name = name;
         }
 
-        [DataMember]
+        [XmlAttribute("ID")]
         public int Id { get; set; }
-        [DataMember]
+        [XmlAttribute("Name")]
         public string Name { get; set; }
     }
 }

@@ -4,18 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace Reader
 {
-    [DataContract]
-    class Item : DescTable
+    
+    public class Item : DescTable
     {
-        [DataMember]
+        [XmlAttribute("Name")]
         public string Name { get; set; }
 
-        public Item(DescTable desc,string name) : base(desc.Id,desc.Text,desc.Category,desc.Equip,desc.Weight)
+        
+        public Item() : this(null,null)
         {
-            Name = name;
+
+        }
+
+
+        public Item(DescTable desc,string name) : base(desc.Id,desc.Text)
+        {
+
         }
     }
 }
