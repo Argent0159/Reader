@@ -14,8 +14,9 @@ namespace Reader
     {
         [XmlAttribute("Name")]
         public string Name { get; set; }
+        [XmlElement]
+        public Illust illust { get; set; }
 
-        
         public Item() : this(null,null)
         {
 
@@ -24,7 +25,39 @@ namespace Reader
 
         public Item(DescTable desc,string name) : base(desc.Id,desc.Text)
         {
+            Name = name;
+        }
+
+        public Item(Item item,Illust illust) : base(item.Id,item.Text)
+        {
+            Name = item.Name;
+            this.illust = illust;
+        }
+
+    }
+
+    //パスを割り当てるときはカード、アイテム画像の順で割り当てること
+    public class Illust
+    {
+        public Illust() : this(0, null, null)
+        {
 
         }
+
+        public Illust(int id, string card)
+        {
+            Card = card;
+        }
+
+        public Illust(int id, string card, string icon) : this(id,card)
+        {
+            Icon = icon;
+        }
+
+        public int Id { get; set; }
+        [XmlElement]
+        public string Card { get; set; }
+        [XmlElement]
+        public string Icon { get; set; }
     }
 }

@@ -20,24 +20,32 @@ namespace Reader
 
             var descTablePath = @"txt\idnum2itemdesctable.txt";
             var displayNameTablePath = @"txt\idnum2itemdisplaynametable.txt";
+            var cardIllustFilePath = @"txt\num2cardillustnametable.txt";
+            var itemIllustFilePath = @"txt\idnum2itemresnametable.txt";
+
 
             //データ取得
             var nameTable = GetNameTable(displayNameTablePath,Encoding.GetEncoding("shift-jis"));
 
             var descTable = GetDescTable(descTablePath);
 
-            //データ結合
+            var cardTable = GetNameTable(cardIllustFilePath, Encoding.GetEncoding("euc-kr"));
+
+            var iconTable = GetNameTable(itemIllustFilePath, Encoding.GetEncoding("euc-kr"));
+
             var joinTable = descTable
                 .Join(nameTable, d => d.Id, n => n.Id, (desc, name) => new Item(desc, name.Name))
                 .ToArray();
-
 
             //シリアライズ対象の定義と実行
             var serializeTarget = new List<KeyValuePair<string, object>>()
             {
                 new KeyValuePair<string, object>(@"xml\integratedTable.xml",joinTable),
                 new KeyValuePair<string, object>(@"xml\idnum2itemdesctable.xml",descTable),
-                new KeyValuePair<string, object>(@"xml\num2itemdisplaynametable.xml",nameTable)
+                new KeyValuePair<string, object>(@"xml\num2itemdisplaynametable.xml",nameTable),
+                new KeyValuePair<string, object>(@"xml\idnum2itemresnametable.xml",iconTable),
+                new KeyValuePair<string, object>(@"xml\num2cardillustnametable.xml",cardTable)
+
             };
             
             MultiSerializeXml(serializeTarget);
