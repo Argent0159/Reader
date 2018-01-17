@@ -47,7 +47,7 @@ namespace Reader
                     iconTable,
                     name => name.Id,
                     icon => icon.Id,
-                    (name, icon) => new { name.Id, name.card, icon })
+                    (main, icon) => new { main.Id, main.card, icon })
                 .SelectMany(
                     val => val.card.DefaultIfEmpty(),
                     (main, card) => new { main.Id, main.icon, CardName = card?.Name })
@@ -70,12 +70,12 @@ namespace Reader
             //シリアライズ対象の定義と実行
             var serializeTarget = new List<KeyValuePair<string, object>>()
             {
-                new KeyValuePair<string, object>(@"xml\integratedTable.xml",descAndName),
+                //new KeyValuePair<string, object>(@"xml\integratedTable.xml",descAndName),
                 new KeyValuePair<string, object>(@"xml\idnum2itemdesctable.xml",descTable),
                 new KeyValuePair<string, object>(@"xml\num2itemdisplaynametable.xml",nameTable),
                 new KeyValuePair<string, object>(@"xml\idnum2itemresnametable.xml",iconTable),
                 new KeyValuePair<string, object>(@"xml\num2cardillustnametable.xml",cardTable),
-                new KeyValuePair<string, object>(@"xml\ConnectedIconData.xml",cardAndIcon),
+                //new KeyValuePair<string, object>(@"xml\ConnectedIconData.xml",cardAndIcon),
                 new KeyValuePair<string, object>(@"xml\IntegratedData.xml",integratedTable)
             };
             
