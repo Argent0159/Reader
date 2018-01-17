@@ -34,7 +34,10 @@ namespace Reader
             var iconTable = GetNameTable(itemIllustFilePath, Encoding.GetEncoding("euc-kr"));
 
             var descAndName = descTable
-                .Join(nameTable, d => d.Id, n => n.Id, (desc, name) => new Item(desc, name.Name))
+                .Join(nameTable,
+                    d => d.Id,
+                    n => n.Id,
+                    (desc, name) => new Item(desc, name.Name))
                 .ToArray();
 
             var cardAndIcon = nameTable
@@ -53,8 +56,7 @@ namespace Reader
                     (main, card) => new { main.Id, main.icon, CardName = card?.Name })
                 .SelectMany(
                     val => val.icon.DefaultIfEmpty(),
-                    (main, icon) => new { main.Id, main.CardName, IconName = icon?.Name })
-                .Select(val => new Illust(val.Id, val.CardName, val.IconName))
+                    (main, icon) => new Illust(main.Id, main.CardName, icon?.Name))
                 .ToArray();
 
             var integratedTable = descAndName
@@ -62,7 +64,7 @@ namespace Reader
                     cardAndIcon,
                     dn => dn.Id,
                     ci => ci.Id,
-                    (dn, ci) => new Item(dn, ci)
+                    (dn, ci) => dn.InsertIllust(ci)
                 )
                 .ToArray();
                               
@@ -70,12 +72,10 @@ namespace Reader
             //シリアライズ対象の定義と実行
             var serializeTarget = new List<KeyValuePair<string, object>>()
             {
-                new KeyValuePair<string, object>(@"xml\integratedTable.xml",descAndName),
                 new KeyValuePair<string, object>(@"xml\idnum2itemdesctable.xml",descTable),
                 new KeyValuePair<string, object>(@"xml\num2itemdisplaynametable.xml",nameTable),
                 new KeyValuePair<string, object>(@"xml\idnum2itemresnametable.xml",iconTable),
                 new KeyValuePair<string, object>(@"xml\num2cardillustnametable.xml",cardTable),
-                new KeyValuePair<string, object>(@"xml\ConnectedIconData.xml",cardAndIcon),
                 new KeyValuePair<string, object>(@"xml\IntegratedData.xml",integratedTable)
             };
             
