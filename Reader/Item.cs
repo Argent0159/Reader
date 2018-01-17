@@ -46,6 +46,7 @@ namespace Reader
 
         public Illust(int id, string card)
         {
+            Id = id;
             Card = card;
         }
 
@@ -54,10 +55,11 @@ namespace Reader
             Icon = icon;
         }
 
+        [XmlIgnore]
         public int Id { get; set; }
-        [XmlElement]
+        [XmlAttribute]
         public string Card { get; set; }
-        [XmlElement]
+        [XmlAttribute]
         public string Icon { get; set; }
     }
 }
