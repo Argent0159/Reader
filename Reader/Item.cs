@@ -34,6 +34,11 @@ namespace Reader
             this.illust = illust;
         }
 
+        public Item InsertIllust(Illust illust)
+        {
+            this.illust = illust;
+            return this;
+        }
     }
 
     //パスを割り当てるときはカード、アイテム画像の順で割り当てること
