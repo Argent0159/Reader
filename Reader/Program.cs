@@ -70,21 +70,21 @@ namespace Reader
                               
 
             //シリアライズ対象の定義と実行
-            var serializeTarget = new Dictionary<string, object>()
+            var serializeTarget = new List<KeyValuePair<string, object>>()
             {
-                [@"xml\idnum2itemdesctable.xml"]=descTable,
-                [@"xml\num2itemdisplaynametable.xml"]=nameTable,
-                [@"xml\idnum2itemresnametable.xml"]=iconTable,
-                [@"xml\num2cardillustnametable.xml"]=cardTable,
-                [@"xml\IntegratedData.xml"]=integratedTable
+                new KeyValuePair<string, object>(@"xml\idnum2itemdesctable.xml",descTable),
+                new KeyValuePair<string, object>(@"xml\num2itemdisplaynametable.xml",nameTable),
+                new KeyValuePair<string, object>(@"xml\idnum2itemresnametable.xml",iconTable),
+                new KeyValuePair<string, object>(@"xml\num2cardillustnametable.xml",cardTable),
+                new KeyValuePair<string, object>(@"xml\IntegratedData.xml",integratedTable)
             };
             
             MultiSerializeXml(serializeTarget);
         }
 
-        private static void MultiSerializeXml(IDictionary<string,object> dictionary)
+        private static void MultiSerializeXml(IEnumerable<KeyValuePair<string,object>> pairs)
         {
-            foreach (var item in dictionary)
+            foreach (var item in pairs)
             {
                 SerializeXml(item.Value, item.Key);
             }
