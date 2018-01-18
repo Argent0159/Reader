@@ -65,9 +65,9 @@ namespace Reader
                     dn => dn.Id,
                     ci => ci.Id,
                     (dn, ci) => dn.InsertIllust(ci)
-                )
-                .ToArray();
-                              
+                );
+
+            var itemCollection = ItemCollection.Create(integratedTable);
 
             //シリアライズ対象の定義と実行
             var serializeTarget = new List<KeyValuePair<string, object>>()
@@ -76,7 +76,7 @@ namespace Reader
                 new KeyValuePair<string, object>(@"xml\num2itemdisplaynametable.xml",nameTable),
                 new KeyValuePair<string, object>(@"xml\idnum2itemresnametable.xml",iconTable),
                 new KeyValuePair<string, object>(@"xml\num2cardillustnametable.xml",cardTable),
-                new KeyValuePair<string, object>(@"xml\IntegratedData.xml",integratedTable)
+                new KeyValuePair<string, object>(@"xml\IntegratedData.xml",itemCollection)
             };
             
             MultiSerializeXml(serializeTarget);

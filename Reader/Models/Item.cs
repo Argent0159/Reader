@@ -9,21 +9,7 @@ using System.Xml.Serialization;
 
 namespace Reader
 {
-    [XmlRoot("Items")]
-    public class ItemCollection
-    {
-        [XmlElement(Type =typeof(Item),ElementName ="Item")]
-        public Item[] Items { get; set; }
-
-        public static ItemCollection Create(IEnumerable<Item> items)
-        {
-            var back = new ItemCollection();
-            back.Items = items.ToArray();
-            return back;
-        }
-    }
-
-    [XmlRoot("Item")]
+    
     public class Item : DescTable
     {
         [XmlAttribute("Name")]
@@ -31,10 +17,9 @@ namespace Reader
         [XmlElement]
         public Illust illust { get; set; }
 
-        public Item() : base(0, string.Empty)
+        public Item() : this(null,null)
         {
-            Name = string.Empty;
-            illust = new Illust();
+
         }
 
 
@@ -59,7 +44,7 @@ namespace Reader
     //パスを割り当てるときはカード、アイテム画像の順で割り当てること
     public class Illust
     {
-        public Illust() : this(0, string.Empty, string.Empty)
+        public Illust() : this(0, null, null)
         {
 
         }
