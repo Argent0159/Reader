@@ -28,7 +28,9 @@
                 <Image Name="CardDesign"/>
             </Viewbox>
         </StackPanel>
-        <TextBlock Name="ItemCaption" Margin="15" Grid.Column="1" Text="{Binding CurrentText}"/>
+        <ScrollViewer Margin="15" Grid.Column="1">
+            <TextBlock Name="ItemCaption" TextWrapping="Wrap" Text="{Binding Path=CurrentText}"/>
+        </ScrollViewer>
         <ListBox Name="ItemList" Grid.Column="2" Margin="15" SelectionChanged="ItemList_SelectionChanged" />
 
 

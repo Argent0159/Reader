@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 
 
 namespace XmlViewer
@@ -33,7 +34,9 @@ namespace XmlViewer
             InitializeComponent();
             ItemList.ItemsSource = itemModel.NameList;
 
-            ItemCaption.DataContext = itemModel.CurrentText;
+            ItemCaption.DataContext = itemModel;
+
+
         }
 
         private void ItemList_SelectionChanged(object sender, SelectionChangedEventArgs e)

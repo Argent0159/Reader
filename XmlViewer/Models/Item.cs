@@ -22,7 +22,13 @@ namespace Reader
             return back;
         }
 
-
+        public Item this[int index]
+        {
+            get
+            {
+                return Items[index];
+            }
+        }
     }
 
     [XmlRoot("Item")]

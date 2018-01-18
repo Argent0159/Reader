@@ -15,7 +15,7 @@ namespace XmlViewer
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        void notifyPropertyChanged([CallerMemberName] string propertyName = "") =>
+        void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         ItemCollection itemCollection;
@@ -28,10 +28,10 @@ namespace XmlViewer
                 var serializer = new XmlSerializer(typeof(Reader.ItemCollection));
                 itemCollection = serializer.Deserialize(reader) as ItemCollection;
             }
+
+            Index = 1;
         }
 
-        private Item CurrentItem
-            => itemCollection.Items[Index];
 
         int _index;
 
@@ -40,12 +40,25 @@ namespace XmlViewer
             get { return _index; }
             set
             {
+                if (_index == value) return;
+
                 _index = value;
-                CurrentText = CurrentItem.Text;
+                CurrentText = itemCollection[Index].Text;
             }
         }
 
-        public string CurrentText { get; set; }
+        private string _currentText;
+
+        public string CurrentText
+        {
+            get { return _currentText; }
+            set
+            {
+                _currentText = value;
+                this.OnPropertyChanged();
+            }
+        }
+
 
         public IEnumerable<string> NameList
             => itemCollection.Items.Select(val => val.Name);
