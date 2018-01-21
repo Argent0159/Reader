@@ -95,7 +95,7 @@ namespace Reader
             {
                 Encoding = Encoding.UTF8,
                 Indent = true,
-                IndentChars = "    "
+                IndentChars = new string(' ', 4)
             };
 
             using (var writer = XmlWriter.Create(filePath,setting))
