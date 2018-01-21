@@ -37,12 +37,20 @@ namespace Reader
         [XmlElement]
         public Illust Illust { get; set; }
 
+        public void SetParameter(Item item)
+        {
+            item = Factory<Item>.Veritifate(item);
+
+            Id = item.Id;
+            Name = item.Name;
+            Illust = item.Illust;
+        }
+
         public Item() : base(0, string.Empty)
         {
             Name = string.Empty;
             Illust = new Illust();
         }
-
 
         public Item(DescTable desc,string name) 
         {
@@ -66,7 +74,7 @@ namespace Reader
 
         public Item InsertIllust(Illust illust)
         {
-            Illust = illust;
+            Illust = Factory<Illust>.Veritifate(illust);
             return this;
         }
     }

@@ -17,12 +17,10 @@ namespace Reader
     {
         static void Main(string[] args)
         {
-
             var descTablePath = @"txt\idnum2itemdesctable.txt";
             var displayNameTablePath = @"txt\idnum2itemdisplaynametable.txt";
             var cardIllustFilePath = @"txt\num2cardillustnametable.txt";
             var itemIllustFilePath = @"txt\idnum2itemresnametable.txt";
-
 
             //データ取得
             var nameTable = GetNameTable(displayNameTablePath,Encoding.GetEncoding("shift-jis"));
@@ -33,6 +31,7 @@ namespace Reader
 
             var iconTable = GetNameTable(itemIllustFilePath, Encoding.GetEncoding("euc-kr"));
 
+
             var descAndName = descTable
                 .Join(nameTable,
                     d => d.Id,
@@ -40,7 +39,7 @@ namespace Reader
                     (desc, name) => new Item(desc, name.Name))
                 .ToArray();
 
-            var cardAndIcon = nameTable
+            var illust = nameTable
                 .GroupJoin(
                     cardTable,
                     name => name.Id,
@@ -61,7 +60,7 @@ namespace Reader
 
             var integratedTable = descAndName
                 .Join(
-                    cardAndIcon,
+                    illust,
                     dn => dn.Id,
                     ci => ci.Id,
                     (dn, ci) => dn.InsertIllust(ci)
