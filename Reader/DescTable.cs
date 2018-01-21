@@ -17,6 +17,13 @@ namespace Reader
 
         }
 
+        public void SetParameter(DescTable desc)
+        {
+            desc = Factory<DescTable>.Veritifate(desc);
+            Id = desc.Id;
+            Text = desc.Text;
+        }
+
         public DescTable(int id, string text)
         {
             Id = id;

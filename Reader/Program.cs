@@ -116,7 +116,7 @@ namespace Reader
 
                 //除外対象："//"から始まる行、空白・除外・Null
                 nameTable = readFile
-                    .Where(val => !val.StartsWith("//"))
+                    .Where(val => !val.StartsWith("//",StringComparison.CurrentCulture))
                     .Where(val => !string.IsNullOrEmpty(val))
                     .Where(val => !string.IsNullOrWhiteSpace(val))
                     .Select(val => val.Split('#'))

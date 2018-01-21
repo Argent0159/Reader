@@ -13,13 +13,19 @@ namespace Reader
     public class ItemCollection
     {
         [XmlElement(Type =typeof(Item),ElementName ="Item")]
-        public Item[] Items { get; set; }
+        public IList<Item> Items { get; private set; }
+
+        public ItemCollection()
+        {
+            Items = new List<Item>();
+        }
 
         public static ItemCollection Create(IEnumerable<Item> items)
         {
-            var back = new ItemCollection();
-            back.Items = items.ToArray();
-            return back;
+            return new ItemCollection
+            {
+                Items = items.ToArray()
+            };
         }
     }
 
@@ -29,29 +35,38 @@ namespace Reader
         [XmlAttribute("Name")]
         public string Name { get; set; }
         [XmlElement]
-        public Illust illust { get; set; }
+        public Illust Illust { get; set; }
 
         public Item() : base(0, string.Empty)
         {
             Name = string.Empty;
-            illust = new Illust();
+            Illust = new Illust();
         }
 
 
-        public Item(DescTable desc,string name) : base(desc.Id,desc.Text)
+        public Item(DescTable desc,string name) 
         {
+            desc = Factory<DescTable>.Veritifate(desc);
+            SetParameter(desc);
+
             Name = name;
         }
 
-        public Item(Item item,Illust illust) : base(item.Id,item.Text)
+        public Item(Item item,Illust illust)
         {
+            item = Factory<Item>.Veritifate(item);
+            illust = Factory<Illust>.Veritifate(illust);
+
+            SetParameter(item);
+            Illust.SetParameter(illust);
+
             Name = item.Name;
-            this.illust = illust;
+            Illust = illust;
         }
 
         public Item InsertIllust(Illust illust)
         {
-            this.illust = illust;
+            Illust = illust;
             return this;
         }
     }
@@ -62,6 +77,15 @@ namespace Reader
         public Illust() : this(0, string.Empty, string.Empty)
         {
 
+        }
+
+        public void SetParameter(Illust illust)
+        {
+            illust = Factory<Illust>.Veritifate(illust);
+
+            Id = illust.Id;
+            Card = illust.Card;
+            Icon = illust.Icon;
         }
 
         public Illust(int id, string card)

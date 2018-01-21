@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using System.Globalization;
 
 namespace Reader
 {
@@ -15,6 +16,14 @@ namespace Reader
 
         }
 
+        public void SetParameter(NameTable nameTable)
+        {
+            nameTable = Factory<NameTable>.Veritifate(nameTable);
+
+            Id = nameTable.Id;
+            Name = nameTable.Name;
+        }
+
         public NameTable(int id,string name)
         {
             Id = id;
@@ -23,7 +32,7 @@ namespace Reader
 
         public NameTable(string id, string name)
         {
-            Id = int.Parse(id);
+            Id = int.Parse(id,CultureInfo.CurrentCulture);
             Name = name;
         }
 
