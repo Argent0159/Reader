@@ -167,10 +167,11 @@ namespace Reader
 
                 var pattern = new Regex(textPattern);
 
+                //一致した正規表現からDescTableを生成する。
                 Func<Match, DescTable> CreateDescTable = val =>
                  {
-                     var id = val.Groups[1].ToString();
-                     var text = val.Groups[2].ToString();
+                     var id = val.Groups[1].Value;
+                     var text = val.Groups[2].Value;
 
                      return new DescTable(id, text);
                  };
