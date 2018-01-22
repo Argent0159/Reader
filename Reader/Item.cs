@@ -13,7 +13,7 @@ namespace Reader
     public class ItemCollection
     {
         [XmlElement(Type =typeof(Item),ElementName ="Item")]
-        public IList<Item> Items { get; private set; }
+        public List<Item> Items { get; private set; }
 
         public ItemCollection()
         {
@@ -24,7 +24,7 @@ namespace Reader
         {
             return new ItemCollection
             {
-                Items = items.ToArray()
+                Items = items.ToList()
             };
         }
     }

@@ -57,6 +57,29 @@ namespace Reader
             MultiSerializeXml(serializeTarget);
         }
 
+        private static void MultiSerializeXml(IDictionary<string, object> dictionary)
+        {
+            foreach (var item in dictionary)
+            {
+                SerializeXml(item.Value, item.Key);
+            }
+        }
+
+        private static void SerializeXml(object target, string filePath)
+        {
+            var setting = new XmlWriterSettings
+            {
+                Encoding = Encoding.UTF8,
+                Indent = true,
+                IndentChars = new string(' ', 4)
+            };
+
+            using (var writer = XmlWriter.Create(filePath, setting))
+            {
+                new XmlSerializer(target.GetType()).Serialize(writer, target);
+            }
+        }
+
         private static IEnumerable<Item> TableIntegration(IEnumerable<Item> descAndName, IEnumerable<Illust> illust)
         {
             return descAndName
@@ -65,7 +88,8 @@ namespace Reader
                     dn => dn.Id,
                     ci => ci.Id,
                     (dn, ci) => dn.InsertIllust(ci)
-                );
+                )
+                .ToArray();
         }
 
         private static IEnumerable<Illust> CreateIllust(IEnumerable<NameTable> nameTable, IEnumerable<NameTable> cardTable, IEnumerable<NameTable> iconTable)
@@ -98,29 +122,6 @@ namespace Reader
                     n => n.Id,
                     (desc, name) => new Item(desc, name.Name))
                 .ToArray();
-        }
-
-        private static void MultiSerializeXml(IDictionary<string,object> dictionary)
-        {
-            foreach (var item in dictionary)
-            {
-                SerializeXml(item.Value, item.Key);
-            }
-        }
-
-        private static void SerializeXml(object target,string filePath)
-        {
-            var setting = new XmlWriterSettings
-            {
-                Encoding = Encoding.UTF8,
-                Indent = true,
-                IndentChars = new string(' ', 4)
-            };
-
-            using (var writer = XmlWriter.Create(filePath,setting))
-            {
-                new XmlSerializer(target.GetType()).Serialize(writer, target);
-            }
         }
 
         //IDに紐づけられた1つのデータを持つ列挙を取得する
@@ -166,14 +167,16 @@ namespace Reader
 
                 var pattern = new Regex(textPattern);
 
-                list = pattern.Matches(fileText).Cast<Match>()
-                    .Select(val =>
-                    {
-                        var id = val.Groups[1].ToString();
-                        var text = val.Groups[2].ToString();
+                Func<Match, DescTable> CreateDescTable = val =>
+                 {
+                     var id = val.Groups[1].ToString();
+                     var text = val.Groups[2].ToString();
 
-                        return new DescTable(id, text);
-                    })
+                     return new DescTable(id, text);
+                 };
+
+                list = pattern.Matches(fileText).Cast<Match>()
+                    .Select(CreateDescTable)
                     .ToArray();
             }
             else
