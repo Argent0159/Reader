@@ -163,11 +163,11 @@ namespace Reader
 
                 var fileText = string.Join(Environment.NewLine, readFile);
 
-                var textPattern = $@"(\d+)#\s*([\S\s]+?)\s*#";
-
-                var pattern = new Regex(textPattern);
 
                 //一致した正規表現からDescTableを生成する。
+                var descPattern = $@"(\d+)#\s*([\S\s]+?)\s*#";
+                var descRegex = new Regex(descPattern);
+
                 Func<Match, DescTable> CreateDescTable = val =>
                  {
                      var id = val.Groups[1].Value;
@@ -176,8 +176,28 @@ namespace Reader
                      return new DescTable(id, text);
                  };
 
-                list = pattern.Matches(fileText).Cast<Match>()
+                //一致した正規表現からIEnumerable<Property>を作成する。
+                var propertyPattern = @"(\S*?)\s+?[:：]\s+?(.+?)($|\s{2,})";
+
+                var propertyRegex = new Regex(propertyPattern);
+
+                Func<DescTable, IEnumerable<Property>> CreateProperties = val =>
+                 {
+                     return propertyRegex.Matches(val.Text)
+                        .Cast<Match>()
+                        .Select(match =>
+                        {
+                            var name = match.Groups[1].Value;
+                            var text = match.Groups[2].Value;
+
+                            return new Property { Name = name, Text = text };
+                        });
+                 };
+
+
+                list = descRegex.Matches(fileText).Cast<Match>()
                     .Select(CreateDescTable)
+                    .Select(val=>val.SetProperty(CreateProperties(val)))
                     .ToArray();
             }
             else

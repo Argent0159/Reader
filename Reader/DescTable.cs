@@ -36,11 +36,18 @@ namespace Reader
             Text = text;
         }
 
+        public DescTable SetProperty(IEnumerable<Property> properties)
+        {
+            Properties = properties.ToList();
+
+            return this;
+        }
+
         [XmlAttribute("ID")]
         public int Id { get; set; }
         [XmlElement]
         public string Text { get; set; }
-        [XmlElement("Properties")]
+        [XmlArray("Properties")]
         public List<Property> Properties { get; set; }
 
         public override string ToString()
@@ -52,9 +59,9 @@ namespace Reader
     [XmlRoot]
     public class Property
     {
-        [XmlElement]
+        [XmlAttribute]
         public string Name { get; set; }
-        [XmlElement]
+        [XmlAttribute]
         public string Text { get; set; }
     }
 }
