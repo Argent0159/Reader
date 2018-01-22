@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DescTable.cs" />
-    <Compile Include="Factory.cs" />
+    <Compile Include="Tools.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="NameTable.cs" />
     <Compile Include="Program.cs" />

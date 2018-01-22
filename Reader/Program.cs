@@ -23,7 +23,7 @@ namespace Reader
             var itemIllustFilePath = @"txt\idnum2itemresnametable.txt";
 
             //データ取得
-            var nameTable = GetNameTable(displayNameTablePath,Encoding.GetEncoding("shift-jis"));
+            var nameTable = GetNameTable(displayNameTablePath, Encoding.GetEncoding("shift-jis"));
 
             var descTable = GetDescTable(descTablePath);
 
@@ -31,15 +31,46 @@ namespace Reader
 
             var iconTable = GetNameTable(itemIllustFilePath, Encoding.GetEncoding("euc-kr"));
 
+            //結合処理の実行
 
-            var descAndName = descTable
-                .Join(nameTable,
-                    d => d.Id,
-                    n => n.Id,
-                    (desc, name) => new Item(desc, name.Name))
-                .ToArray();
+            //Desc+Name
+            var descAndName = CreateItem(nameTable, descTable);
 
-            var illust = nameTable
+            //Name+Icon+Card
+            var illust = CreateIllust(nameTable, cardTable, iconTable);
+
+            //統合
+            var integratedTable = TableIntegration(descAndName, illust);
+
+            var itemCollection = ItemCollection.Create(integratedTable);
+
+            //シリアライズ対象の定義と実行
+            var serializeTarget = new Dictionary<string, object>()
+            {
+                [@"xml\idnum2itemdesctable.xml"] = descTable,
+                [@"xml\num2itemdisplaynametable.xml"] = nameTable,
+                [@"xml\idnum2itemresnametable.xml"] = iconTable,
+                [@"xml\num2cardillustnametable.xml"] = cardTable,
+                [@"xml\IntegratedData.xml"] = itemCollection
+            };
+
+            MultiSerializeXml(serializeTarget);
+        }
+
+        private static IEnumerable<Item> TableIntegration(IEnumerable<Item> descAndName, IEnumerable<Illust> illust)
+        {
+            return descAndName
+                .Join(
+                    illust,
+                    dn => dn.Id,
+                    ci => ci.Id,
+                    (dn, ci) => dn.InsertIllust(ci)
+                );
+        }
+
+        private static IEnumerable<Illust> CreateIllust(IEnumerable<NameTable> nameTable, IEnumerable<NameTable> cardTable, IEnumerable<NameTable> iconTable)
+        {
+            return nameTable
                 .GroupJoin(
                     cardTable,
                     name => name.Id,
@@ -57,28 +88,16 @@ namespace Reader
                     val => val.icon.DefaultIfEmpty(),
                     (main, icon) => new Illust(main.Id, main.CardName, icon?.Name))
                 .ToArray();
+        }
 
-            var integratedTable = descAndName
-                .Join(
-                    illust,
-                    dn => dn.Id,
-                    ci => ci.Id,
-                    (dn, ci) => dn.InsertIllust(ci)
-                );
-
-            var itemCollection = ItemCollection.Create(integratedTable);
-
-            //シリアライズ対象の定義と実行
-            var serializeTarget = new Dictionary<string, object>()
-            {
-                [@"xml\idnum2itemdesctable.xml"]=descTable,
-                [@"xml\num2itemdisplaynametable.xml"]=nameTable,
-                [@"xml\idnum2itemresnametable.xml"]=iconTable,
-                [@"xml\num2cardillustnametable.xml"]=cardTable,
-                [@"xml\IntegratedData.xml"]=itemCollection
-            };
-            
-            MultiSerializeXml(serializeTarget);
+        private static IEnumerable<Item> CreateItem(IEnumerable<NameTable> nameTable, IEnumerable<DescTable> descTable)
+        {
+            return descTable
+                .Join(nameTable,
+                    d => d.Id,
+                    n => n.Id,
+                    (desc, name) => new Item(desc, name.Name))
+                .ToArray();
         }
 
         private static void MultiSerializeXml(IDictionary<string,object> dictionary)
