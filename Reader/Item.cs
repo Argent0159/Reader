@@ -80,6 +80,7 @@ namespace Reader
     }
 
     //パスを割り当てるときはカード、アイテム画像の順で割り当てること
+    [XmlRoot]
     public class Illust
     {
         public Illust() : this(0, string.Empty, string.Empty)

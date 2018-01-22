@@ -40,11 +40,21 @@ namespace Reader
         public int Id { get; set; }
         [XmlElement]
         public string Text { get; set; }
-
+        [XmlElement("Properties")]
+        public List<Property> Properties { get; set; }
 
         public override string ToString()
         {
             return "ID:" + Id + Environment.NewLine + "Text:" + Environment.NewLine + Text;
         }
+    }
+
+    [XmlRoot]
+    public class Property
+    {
+        [XmlElement]
+        public string Name { get; set; }
+        [XmlElement]
+        public string Text { get; set; }
     }
 }
