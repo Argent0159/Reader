@@ -36,7 +36,7 @@ namespace Reader
             Text = text;
         }
 
-        public DescTable SetProperty(IEnumerable<Property> properties)
+        public DescTable SetProperty(IEnumerable<ItemProperty> properties)
         {
             Properties = properties.ToList();
 
@@ -48,7 +48,7 @@ namespace Reader
         [XmlElement]
         public string Text { get; set; }
         [XmlArray("Properties")]
-        public List<Property> Properties { get; set; }
+        public List<ItemProperty> Properties { get; set; }
 
         public override string ToString()
         {
@@ -57,7 +57,7 @@ namespace Reader
     }
 
     [XmlRoot]
-    public class Property
+    public class ItemProperty
     {
         [XmlAttribute]
         public string Name { get; set; }

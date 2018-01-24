@@ -181,7 +181,7 @@ namespace Reader
 
                 var propertyRegex = new Regex(propertyPattern);
 
-                Func<DescTable, IEnumerable<Property>> CreateProperties = val =>
+                Func<DescTable, IEnumerable<ItemProperty>> CreateProperties = val =>
                  {
                      return propertyRegex.Matches(val.Text)
                         .Cast<Match>()
@@ -190,7 +190,7 @@ namespace Reader
                             var name = match.Groups[1].Value;
                             var text = match.Groups[2].Value;
 
-                            return new Property { Name = name, Text = text };
+                            return new ItemProperty { Name = name, Text = text };
                         });
                  };
 
